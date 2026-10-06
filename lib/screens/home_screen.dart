@@ -1,3 +1,4 @@
+import 'package:flashcard_quiz/screens/study_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/flashcards.dart';
 import '../services/flashcard_service.dart';
@@ -81,10 +82,25 @@ class _HomeScreenState extends State<HomeScreen> {
     ).showSnackBar(const SnackBar(content: Text('Flashcard deleted')));
   }
 
+  void _openStudyScreen() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => StudyScreen(cards: _cards)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flashcard Quiz')),
+      appBar: AppBar(
+        title: const Text('Flashcard Quiz'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.school_outlined),
+            tooltip: 'Study',
+            onPressed: _cards.isEmpty ? null : _openStudyScreen,
+          ),
+        ],
+      ),
       body: _cards.isEmpty ? _buildEmptyState() : _buildCardList(),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddScreen,
