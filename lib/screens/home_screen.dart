@@ -38,6 +38,49 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _openEditScreen(Flashcard card) async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => AddEditScreen(existingCard: card)),
+    );
+    if (saved == true) {
+      _loadCards();
+    }
+  }
+
+  Future<void> _confirmDelete(Flashcard card) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete flashcard?'),
+          content: Text(
+            'This will permanently delete the card:\n\n"${card.question}"',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+
+    await _service.deleteCard(card.id);
+    _loadCards();
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Flashcard deleted')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,14 +129,12 @@ class _HomeScreenState extends State<HomeScreen> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Edit card #${card.id} — coming next step'),
-              ),
-            );
-          },
+          trailing: IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Delete',
+            onPressed: () => _confirmDelete(card),
+          ),
+          onTap: () => _openEditScreen(card),
         );
       },
     );
