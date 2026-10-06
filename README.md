@@ -1,17 +1,24 @@
-# flashcard_quiz
+# CodeAlpha Flashcard Quiz App
 
-A new Flutter project.
+A simple, offline Flutter flashcard study app built as part of the CodeAlpha App Development internship (Task 1).
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Add, edit, and delete flashcards
+- Persistent storage using Hive (works offline, no backend)
+- Study mode with Show Answer, Next, and Previous navigation
+- Clean, minimal UI with an animated empty state
 
-A few resources to get you started if this is your first Flutter project:
+## Screens
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- **Home** — list of all flashcards, with add / edit / delete actions
+- **Add / Edit** — full-screen form to create or update a card
+- **Study** — study the cards one at a time, reveal answers on demand
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech
+
+- Flutter (Dart)
+- Hive (local key-value store)
+- Lottie (empty-state animation)
+
+## Project structure
