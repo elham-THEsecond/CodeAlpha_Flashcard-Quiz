@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/flashcards.dart';
 import '../services/flashcard_service.dart';
 import 'add_edit_screen.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,39 +93,56 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flashcard Quiz'),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: const Text('Flashcard Quiz'),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.school_outlined),
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.play_lesson, size: 30, color: Colors.blue[800]),
+            ),
+
             tooltip: 'Study',
             onPressed: _cards.isEmpty ? null : _openStudyScreen,
           ),
         ],
       ),
       body: _cards.isEmpty ? _buildEmptyState() : _buildCardList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openAddScreen,
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+          onPressed: _openAddScreen,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
 
   Widget _buildEmptyState() {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.style_outlined, size: 72, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'No flashcards yet!',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+            SizedBox(
+              height: 200,
+              child: Lottie.asset(
+                'assets/searching_files.json',
+                fit: BoxFit.contain,
+                repeat: true,
+              ),
             ),
-            SizedBox(height: 8),
-            Text(
-              'Tap the + to Add your first flashcrad!',
+            const SizedBox(height: 16),
+            const Text(
+              'No flashcards yet',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Tap + to add your first card.',
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -138,19 +156,26 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: _cards.length,
       itemBuilder: (context, index) {
         final card = _cards[index];
-        return ListTile(
-          leading: CircleAvatar(child: Text('${index + 1}')),
-          title: Text(
-            card.question,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 97, 175, 239),
+              radius: 28,
+              child: Text('${index + 1}'),
+            ),
+            title: Text(
+              card.question,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              tooltip: 'Delete',
+              onPressed: () => _confirmDelete(card),
+            ),
+            onTap: () => _openEditScreen(card),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete_outline),
-            tooltip: 'Delete',
-            onPressed: () => _confirmDelete(card),
-          ),
-          onTap: () => _openEditScreen(card),
         );
       },
     );
